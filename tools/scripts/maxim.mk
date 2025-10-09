@@ -56,8 +56,83 @@ TARGET_REV=0x4131
 
 TARGETCFG=$(TARGET_LCASE).cfg
 
-OPENOCD_SCRIPTS=$(MAXIM_LIBRARIES)/../Tools/OpenOCD/scripts
-OPENOCD_BIN=$(MAXIM_LIBRARIES)/../Tools/OpenOCD
+# =============================================================================
+# OpenOCD Configuration with ARM64 Support
+# =============================================================================
+
+# Detect host architecture
+HOST_ARCH := $(shell uname -m)
+
+ifeq ($(HOST_ARCH),aarch64)
+    # ARM64 host detected
+    
+    # Priority 1: User-specified path (highest priority)
+    ifdef OPENOCD_PATH
+        OPENOCD_BIN := $(OPENOCD_PATH)
+        ifdef OPENOCD_SCRIPTS_PATH
+            OPENOCD_SCRIPTS := $(OPENOCD_SCRIPTS_PATH)
+        else
+            # Derive scripts path from binary path
+            OPENOCD_SCRIPTS := $(dir $(OPENOCD_PATH))../
+        endif
+        $(info [ARM64] Using custom OpenOCD: $(OPENOCD_BIN))
+    else
+        # Priority 2: Workshop standard location (auto-detect)
+        AI8X_OPENOCD := $(wildcard $(HOME)/workshop_baremetal/ai8x-synthesis/openocd/bin/Linux_aarch64/openocd)
+        
+        ifneq ($(AI8X_OPENOCD),)
+            OPENOCD_BIN := $(dir $(AI8X_OPENOCD))
+            OPENOCD_SCRIPTS := $(HOME)/workshop_baremetal/ai8x-synthesis/openocd
+            $(info [ARM64] Using Workshop OpenOCD: $(OPENOCD_BIN))
+        else
+            # Priority 3: Error with helpful message
+            $(error $(ENDL)\
+╔════════════════════════════════════════════════════════════╗$(ENDL)\
+║ ARM64 OpenOCD Not Found                                    ║$(ENDL)\
+╚════════════════════════════════════════════════════════════╝$(ENDL)\
+$(ENDL)\
+OpenOCD not found in: ~/workshop_baremetal/ai8x-synthesis$(ENDL)\
+$(ENDL)\
+Option 1 - Install to workshop folder (recommended):$(ENDL)\
+  cd ~/workshop_baremetal$(ENDL)\
+  git clone https://github.com/analogdevicesinc/ai8x-synthesis.git$(ENDL)\
+$(ENDL)\
+Option 2 - Use custom location:$(ENDL)\
+  export OPENOCD_PATH=/path/to/openocd/bin/Linux_aarch64$(ENDL)\
+  export OPENOCD_SCRIPTS_PATH=/path/to/openocd$(ENDL)\
+$(ENDL)\
+Then run 'make run' again.$(ENDL))
+        endif
+    endif
+    
+    # Detect OpenOCD directory layout (ai8x-synthesis vs standard)
+    OPENOCD_TARGET_AT_ROOT := $(wildcard $(OPENOCD_SCRIPTS)/$(TARGET_LCASE).cfg)
+    ifneq ($(OPENOCD_TARGET_AT_ROOT),)
+        # ai8x-synthesis style: target configs at root level
+        OPENOCD_TARGET_CFG := $(TARGET_LCASE).cfg
+        $(info [ARM64] Detected ai8x-synthesis OpenOCD layout)
+    else
+        # Standard OpenOCD: target configs in target/ subdirectory
+        OPENOCD_TARGET_CFG := target/$(TARGET_LCASE).cfg
+        $(info [ARM64] Detected standard OpenOCD layout)
+    endif
+    
+else
+    # x86_64 host: Use MaximSDK OpenOCD (standard layout)
+    OPENOCD_BIN := $(MAXIM_LIBRARIES)/../Tools/OpenOCD
+    OPENOCD_SCRIPTS := $(MAXIM_LIBRARIES)/../Tools/OpenOCD/scripts
+    OPENOCD_TARGET_CFG := target/$(TARGET_LCASE).cfg
+endif
+
+# Default values if not set (should not happen, but safety net)
+OPENOCD_BIN ?= $(MAXIM_LIBRARIES)/../Tools/OpenOCD
+OPENOCD_SCRIPTS ?= $(MAXIM_LIBRARIES)/../Tools/OpenOCD/scripts
+OPENOCD_TARGET_CFG ?= target/$(TARGET_LCASE).cfg
+
+# =============================================================================
+# End OpenOCD Configuration
+# =============================================================================
+
 GDB_PATH=$(ARM_COMPILER_PATH)
 OPENOCD_SVD=$(MAXIM_LIBRARIES)/CMSIS/Device/Maxim/$(TARGET_UCASE)/Include
 TARGETSVD=$(TARGET)
@@ -193,7 +268,7 @@ clean: clean_hex
 $(PLATFORM)_run: all $(BINARY).id
 	$(OPENOCD_BIN)/openocd -s "$(OPENOCD_SCRIPTS)" \
 		-f $(BINARY).id \
-		-f target/$(TARGETCFG) \
+		-f $(OPENOCD_TARGET_CFG) \
 		-c "program $(BINARY) verify reset exit"
 
 .PHONY: debug
@@ -203,4 +278,4 @@ debug: all $(BINARY).gdb start_openocd
 .PHONY: start_openocd
 start_openocd:
 	$(OPENOCD_BIN)/openocd -s "$(OPENOCD_SCRIPTS)" 	\
-		-f interface/cmsis-dap.cfg -f target/$(TARGETCFG) -c "init" &
+		-f interface/cmsis-dap.cfg -f $(OPENOCD_TARGET_CFG) -c "init" &
