@@ -168,6 +168,32 @@ int iio_hw_trig_remove(struct iio_hw_trig *trig)
 
 	return 0;
 }
+#else
+/**
+ * @brief Stub implementation for Linux platform (no trigger support).
+ *
+ * @param trig - Trigger structure (unused).
+ *
+ * @return 0 - Always succeeds (no-op).
+ */
+int iio_trig_enable(void *trig)
+{
+	(void)trig;
+	return 0;
+}
+
+/**
+ * @brief Stub implementation for Linux platform (no trigger support).
+ *
+ * @param trig - Trigger structure (unused).
+ *
+ * @return 0 - Always succeeds (no-op).
+ */
+int iio_trig_disable(void *trig)
+{
+	(void)trig;
+	return 0;
+}
 #endif
 
 /**

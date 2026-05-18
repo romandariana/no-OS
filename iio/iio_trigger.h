@@ -113,14 +113,15 @@ struct iio_sw_trig_init_param {
 	const char *name;
 };
 
+/** API to enable a hardware trigger */
+int iio_trig_enable(void *trig);
+/** API to disable a hardware trigger */
+int iio_trig_disable(void *trig);
+
 #ifndef LINUX_PLATFORM
 /** API to initialize a hardware trigger */
 int iio_hw_trig_init(struct iio_hw_trig **iio_trig,
 		     struct iio_hw_trig_init_param *init_param);
-/** API to enable a hardware  trigger */
-int iio_trig_enable(void *trig);
-/** API to disable a hardware trigger */
-int iio_trig_disable(void *trig);
 /** API for hardware trigger handler */
 void iio_hw_trig_handler(void *trig);
 /** API to remove a hardware trigger */
