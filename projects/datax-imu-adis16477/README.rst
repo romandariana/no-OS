@@ -1,4 +1,4 @@
-ADIS1647X Family no-OS Example Project
+ADIS16477 no-OS Example Project
 ======================================
 
 .. no-os-doxygen::
@@ -109,9 +109,9 @@ The macros used in Common Data are defined in platform specific files found in:
 Basic example
 ^^^^^^^^^^^^^
 
-This is a simple example which initializes the adis1647x selected device and
-performs angular velocity, acceleration and temperature readings in a while loop
-with a period of 1s. The data is printed on the serial interface.
+This is a simple example which initializes the adis16477 device and performs
+angular velocity, acceleration and temperature readings in a while loop with a
+period of 1s. The data is printed on the serial interface.
 
 In order to build the IIO project make sure you have the following configuration in the
 `Makefile <https://github.com/analogdevicesinc/no-OS/tree/main/projects/eval-adis1647x/Makefile>`_
@@ -119,8 +119,7 @@ In order to build the IIO project make sure you have the following configuration
 .. code-block:: bash
 
         # Select the example you want to enable by choosing y for enabling and n for disabling
-        BASIC_EXAMPLE = y
-        IIO_TRIGGER_EXAMPLE = n
+        EXAMPLE=basic
 
 IIO example
 ^^^^^^^^^^^
@@ -158,55 +157,10 @@ In order to build the IIO project make sure you have the following configuration
 .. code-block:: bash
 
         # Select the example you want to enable by choosing y for enabling and n for disabling
-        BASIC_EXAMPLE = n
-        IIO_TRIGGER_EXAMPLE = y
+        EXAMPLE = iio_example
 
 No-OS Supported Platforms
 -------------------------
-
-STM32 Platform
-^^^^^^^^^^^^^^
-
-**Used hardware**:
-
-* `EVAL-ADIS16477 <https://www.analog.com/en/design-center/evaluation-hardware-and-software/evaluation-boards-kits/EVAL-ADIS16477.html>`_ with
-* `SDP-K1 <https://www.analog.com/en/design-center/evaluation-hardware-and-software/evaluation-boards-kits/sdp-k1.html>`_ and
-* ST debugger
-
-**Connections**:
-
-+---------------------------+----------+-------------------------------------------------------+-------------------+
-| EVAL-ADIS1647X Pin Number | Mnemonic | Function                                              | SDP-K1 Pin Number |
-+---------------------------+----------+-------------------------------------------------------+-------------------+
-| 1                         | ~RST     | Reset, active low                                     | ANALOG IN A1      |
-+---------------------------+----------+-------------------------------------------------------+-------------------+
-| 2                         | SCLK     | Serial Clock                                          | DIGITAL 13        |
-+---------------------------+----------+-------------------------------------------------------+-------------------+
-| 3                         | ~CS      | Chip Select (Serial Peripheral Interface), Active Low | DIGITAL 10        |
-+---------------------------+----------+-------------------------------------------------------+-------------------+
-| 4                         | DOUT     | Data Output (Serial Peripheral Interface)             | DIGITAL 12        |
-+---------------------------+----------+-------------------------------------------------------+-------------------+
-| 6                         | DIN      | Data Input (Serial Peripheral Interface)              | DIGITAL 11        |
-+---------------------------+----------+-------------------------------------------------------+-------------------+
-| 7                         | GND      | Ground                                                | DIGITAL GND       |
-+---------------------------+----------+-------------------------------------------------------+-------------------+
-| 10                        | VDD      | Power Supply, +3.3V                                   | POWER 3.3V        |
-+---------------------------+----------+-------------------------------------------------------+-------------------+
-| 13                        | DR       | Data Ready                                            | ANALOG IN A0      |
-+---------------------------+----------+-------------------------------------------------------+-------------------+
-
-**Build Command**
-
-.. code-block:: bash
-
-        # to delete current build
-        make reset
-        # to build the project
-        make PLATFORM=stm32
-        # to flash the code
-        make run
-        # to debug the code
-        make debug
 
 Maxim Platform
 ^^^^^^^^^^^^^^
@@ -246,64 +200,6 @@ Maxim Platform
         make reset
         # to build the project
         make PLATFORM=maxim TARGET=max78000
-        # to flash the code
-        make run
-        # to debug the code
-        make debug
-
-Pico Platform
-^^^^^^^^^^^^^
-
-**Used hardware**:
-
-* `EVAL-ADIS16477 <https://www.analog.com/en/design-center/evaluation-hardware-and-software/evaluation-boards-kits/EVAL-ADIS16477.html>`_ with
-* Raspberry Pi Pico with
-* `ADALM-UARTJTAG <https://www.analog.com/en/design-center/evaluation-hardware-and-software/evaluation-boards-kits/ADALM-UARTJTAG.html>`_ Adapter for Raspberry Pi Pico UART to USB Connection
-
-**Connections**:
-
-+---------------------------+----------+-------------------------------------------------------+---------------------+
-| EVAL-ADIS1647X Pin Number | Mnemonic | Function                                              | MAX78000 Pin Number |
-+---------------------------+----------+-------------------------------------------------------+---------------------+
-| 1                         | ~RST     | Reset, active low                                     | GP20                |
-+---------------------------+----------+-------------------------------------------------------+---------------------+
-| 2                         | SCLK     | Serial Clock                                          | GP18                |
-+---------------------------+----------+-------------------------------------------------------+---------------------+
-| 3                         | ~CS      | Chip Select (Serial Peripheral Interface), Active Low | GP17                |
-+---------------------------+----------+-------------------------------------------------------+---------------------+
-| 4                         | DOUT     | Data Output (Serial Peripheral Interface)             | GP16                |
-+---------------------------+----------+-------------------------------------------------------+---------------------+
-| 6                         | DIN      | Data Input (Serial Peripheral Interface)              | GP19                |
-+---------------------------+----------+-------------------------------------------------------+---------------------+
-| 7                         | GND      | Ground                                                | GND                 |
-+---------------------------+----------+-------------------------------------------------------+---------------------+
-| 10                        | VDD      | Power Supply, +3.3V                                   | 3V3                 |
-+---------------------------+----------+-------------------------------------------------------+---------------------+
-| 13                        | DR       | Data Ready                                            | GP21                |
-+---------------------------+----------+-------------------------------------------------------+---------------------+
-
-The following table shows how the connection between ADALM-UARTJTAG and Raspberry Pi Pico is realized in this project example.
-
-+---------------------------+------------------------------+--------------+
-| ADALM-UARTJTAG Pin Number | Raspberry Pi Pico Pin Number | Function     |
-+---------------------------+------------------------------+--------------+
-| VIO                       | VBUS                         | Bus voltage  |
-+---------------------------+------------------------------+--------------+
-| GND                       | GND                          | Ground       |
-+---------------------------+------------------------------+--------------+
-| TX                        | GP1 (Pico RX)                | Pico UART RX |
-+---------------------------+------------------------------+--------------+
-| RX                        | GP0 (Pico Tx)                | Pico UART TX |
-+---------------------------+------------------------------+--------------+
-
-**Build Command**
-
-.. code-block:: bash
-
-        # to delete current build
-        make reset
-        # to build the project
-        make PLATFORM=pico
         # to flash the code
         make run
         # to debug the code

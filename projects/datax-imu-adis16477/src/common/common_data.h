@@ -40,9 +40,9 @@
 #include "iio_adis1647x.h"
 #endif
 
-extern struct no_os_uart_init_param adis1647x_uart_ip;
-extern struct no_os_spi_init_param adis1647x_spi_ip;
-extern struct no_os_gpio_init_param adis1647x_gpio_reset_ip;
-extern struct adis_init_param adis1647x_ip;
+extern struct no_os_uart_init_param adis16477_uart_ip;
+extern struct no_os_spi_init_param adis16477_spi_ip;
+extern struct no_os_gpio_init_param adis16477_gpio_reset_ip;
+extern struct adis_init_param adis16477_ip;
 
 #endif /* __COMMON_DATA_H__ */

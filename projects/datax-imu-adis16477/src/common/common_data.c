@@ -1,6 +1,6 @@
 /***************************************************************************//**
  *   @file   common_data.c
- *   @brief  Defines common data to be used by eval-adis1647x examples.
+ *   @brief  Defines common data
  *   @author Alisa-Dariana Roman <alisa.roman@analog.com>
 ********************************************************************************
  * Copyright 2026(c) Analog Devices, Inc.
@@ -34,7 +34,7 @@
 #include "common_data.h"
 #include "no_os_gpio.h"
 
-struct no_os_uart_init_param adis1647x_uart_ip = {
+struct no_os_uart_init_param adis16477_uart_ip = {
 	.device_id = UART_DEVICE_ID,
 	.irq_id = UART_IRQ_ID,
 	.asynchronous_rx = true,
@@ -46,7 +46,7 @@ struct no_os_uart_init_param adis1647x_uart_ip = {
 	.platform_ops = UART_OPS,
 };
 
-struct no_os_spi_init_param adis1647x_spi_ip = {
+struct no_os_spi_init_param adis16477_spi_ip = {
 	.device_id = SPI_DEVICE_ID,
 	.max_speed_hz = SPI_BAUDRATE,
 	.bit_order = NO_OS_SPI_BIT_ORDER_MSB_FIRST,
@@ -57,7 +57,7 @@ struct no_os_spi_init_param adis1647x_spi_ip = {
 };
 
 /* Initialization for Sync pin */
-struct no_os_gpio_init_param adis1647x_gpio_reset_ip = {
+struct no_os_gpio_init_param adis16477_gpio_reset_ip = {
 	.port = GPIO_RESET_PORT_NUM,
 	.number = GPIO_RESET_PIN_NUM,
 	.pull = NO_OS_PULL_NONE,
@@ -65,9 +65,9 @@ struct no_os_gpio_init_param adis1647x_gpio_reset_ip = {
 	.extra = GPIO_EXTRA
 };
 
-struct adis_init_param adis1647x_ip = {
+struct adis_init_param adis16477_ip = {
 	.info = &adis1647x_chip_info,
-	.gpio_reset = &adis1647x_gpio_reset_ip,
+	.gpio_reset = &adis16477_gpio_reset_ip,
 	.sync_mode = ADIS_SYNC_OUTPUT,
-	.dev_id = ADIS16477_1,
+	.dev_id = ADIS16477_3,
 };

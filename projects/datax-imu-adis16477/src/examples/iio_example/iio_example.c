@@ -1,6 +1,6 @@
 /***************************************************************************//**
  *   @file   iio_example.c
- *   @brief  IIO example for eval-adis1647x project (no triggers, Linux-compatible)
+ *   @brief  IIO example (no triggers, Linux-compatible)
  *   @author Alisa-Dariana Roman <alisa.roman@analog.com>
 ********************************************************************************
  * Copyright 2026(c) Analog Devices, Inc.
@@ -47,11 +47,11 @@
 int example_main(void)
 {
 	int ret;
-	struct adis_iio_dev *adis1647x_iio_desc;
+	struct adis_iio_dev *adis16477_iio_desc;
 	struct iio_app_desc *app;
 	struct iio_app_init_param app_init_param = { 0 };
 
-	ret = adis1647x_iio_init(&adis1647x_iio_desc, &adis1647x_ip);
+	ret = adis1647x_iio_init(&adis16477_iio_desc, &adis16477_ip);
 	if (ret) {
 		pr_err("adis1647x_iio_init failed with code: %d\n", ret);
 		goto exit;
@@ -60,28 +60,28 @@ int example_main(void)
 	struct iio_app_device iio_devices[] = {
 		{
 			.name = "adis16477",
-			.dev = adis1647x_iio_desc,
-			.dev_descriptor = adis1647x_iio_desc->iio_dev,
+			.dev = adis16477_iio_desc,
+			.dev_descriptor = adis16477_iio_desc->iio_dev,
 			.read_buff = NULL,
 		}
 	};
 
 	app_init_param.devices = iio_devices;
 	app_init_param.nb_devices = NO_OS_ARRAY_SIZE(iio_devices);
-	app_init_param.uart_init_params = adis1647x_uart_ip;
+	app_init_param.uart_init_params = adis16477_uart_ip;
 
 	ret = iio_app_init(&app, app_init_param);
 	if (ret) {
 		pr_err("iio_app_init failed with code: %d\n", ret);
-		goto remove_iio_adis1647x;
+		goto remove_iio_adis16477;
 	}
 
 	ret = iio_app_run(app);
 
 	iio_app_remove(app);
 
-remove_iio_adis1647x:
-	adis1647x_iio_remove(adis1647x_iio_desc);
+remove_iio_adis16477:
+	adis1647x_iio_remove(adis16477_iio_desc);
 exit:
 	if (ret)
 		pr_err("Error!\n");

@@ -46,12 +46,12 @@ int main()
 {
 	int ret = -EINVAL;
 
-	adis1647x_ip.spi_init = &adis1647x_spi_ip;
+	adis16477_ip.spi_init = &adis16477_spi_ip;
 
 #ifdef BASIC_EXAMPLE
 	struct no_os_uart_desc *uart_desc;
 
-	ret = no_os_uart_init(&uart_desc, &adis1647x_uart_ip);
+	ret = no_os_uart_init(&uart_desc, &adis16477_uart_ip);
 	if (ret)
 		return ret;
 

@@ -44,7 +44,7 @@ extern int example_main();
 *******************************************************************************/
 int main(void)
 {
-	adis1647x_ip.spi_init = &adis1647x_spi_ip;
+	adis16477_ip.spi_init = &adis16477_spi_ip;
 
 	return example_main();
 }

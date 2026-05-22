@@ -65,26 +65,26 @@ static const char * const output_unit[] = {
  */
 int example_main()
 {
-	struct adis_dev *adis1647x_desc;
+	struct adis_dev *adis16477_desc;
 	int ret;
 	int32_t val[7];
 	struct adis_scale_fractional accl_scale;
 	struct adis_scale_fractional anglvel_scale;
 	struct adis_scale_fractional temp_scale;
 
-	ret = adis_init(&adis1647x_desc, &adis1647x_ip);
+	ret = adis_init(&adis16477_desc, &adis16477_ip);
 	if (ret)
 		goto exit;
 
-	ret = adis_get_accl_scale(adis1647x_desc, &accl_scale);
+	ret = adis_get_accl_scale(adis16477_desc, &accl_scale);
 	if (ret)
 		goto exit;
 
-	ret = adis_get_anglvel_scale(adis1647x_desc, &anglvel_scale);
+	ret = adis_get_anglvel_scale(adis16477_desc, &anglvel_scale);
 	if (ret)
 		goto exit;
 
-	ret = adis_get_temp_scale(adis1647x_desc, &temp_scale);
+	ret = adis_get_temp_scale(adis16477_desc, &temp_scale);
 	if (ret)
 		goto exit;
 
@@ -101,25 +101,25 @@ int example_main()
 	while (1) {
 		pr_info("while loop \n");
 		no_os_mdelay(1000);
-		ret = adis_read_x_gyro(adis1647x_desc, &val[0]);
+		ret = adis_read_x_gyro(adis16477_desc, &val[0]);
 		if (ret)
 			goto exit;
-		ret = adis_read_y_gyro(adis1647x_desc, &val[1]);
+		ret = adis_read_y_gyro(adis16477_desc, &val[1]);
 		if (ret)
 			goto exit;
-		ret = adis_read_z_gyro(adis1647x_desc, &val[2]);
+		ret = adis_read_z_gyro(adis16477_desc, &val[2]);
 		if (ret)
 			goto exit;
-		ret = adis_read_x_accl(adis1647x_desc, &val[3]);
+		ret = adis_read_x_accl(adis16477_desc, &val[3]);
 		if (ret)
 			goto exit;
-		ret = adis_read_y_accl(adis1647x_desc, &val[4]);
+		ret = adis_read_y_accl(adis16477_desc, &val[4]);
 		if (ret)
 			goto exit;
-		ret = adis_read_z_accl(adis1647x_desc, &val[5]);
+		ret = adis_read_z_accl(adis16477_desc, &val[5]);
 		if (ret)
 			goto exit;
-		ret = adis_read_temp_out(adis1647x_desc, &val[6]);
+		ret = adis_read_temp_out(adis16477_desc, &val[6]);
 		if (ret)
 			goto exit;
 
@@ -128,7 +128,7 @@ int example_main()
 				output_unit[i]);
 	}
 exit:
-	adis_remove(adis1647x_desc);
+	adis_remove(adis16477_desc);
 	if (ret)
 		pr_info("Error!\n");
 	return ret;
